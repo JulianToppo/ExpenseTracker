@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Login Up </title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <div>
+
+
+            <div id="errorMsg"></div>
+
+            <div class="card my-5" style="background-color: bisque;">
+                <div class="text-center">
+                    <img src="https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_1280.jpg"
+                        class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3" width="200px"
+                        alt="profile">
+                </div>
+
+                <form class="card-body cardbody-color p-lg-5" method="post">
+                    <label for="email">Email:</label>
+                    <input type="text" class="form-control" placeholder="Enter Email" id="email" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" placeholder="Enter Password" id="password" required>
+                    <br>
+                    <button class="btn px-5 mb-5 w-100" style="background-color: #ebb0fe;" type="submit"
+                        id="submitLoginForm" value="Submit">Login</button>
+
+                    <div class="text-center">
+                        <button id="forgotPassword">Forgot Password?</button>
+                        <div id="loginError" style="color: red;"></div>
+                       <p>Not Registered ? <button><a href="/signUp">Sign Up</a></button></p
+                    </div>
+
+
+                    <br>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src='/login.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</body>
+
+</html>
