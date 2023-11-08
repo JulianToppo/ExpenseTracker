@@ -6,7 +6,11 @@
 
 <h2>🚀 Demo</h2>
 
-[https://www.veed.io/view/17753f69-94b8-4279-b4cc-15421f2b93e6?panel=share](https://www.veed.io/view/17753f69-94b8-4279-b4cc-15421f2b93e6?panel=share)
+
+
+https://github.com/JulianToppo/ExpenseTracker/assets/51400577/6edc0750-dfbb-4bef-9a4a-51783649d0ca
+
+
 
 <h2>Project Screenshots:</h2>
 
