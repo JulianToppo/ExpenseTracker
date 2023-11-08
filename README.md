@@ -15,15 +15,15 @@
 <p>SignUp</p>
 <img src="./public/img/signup.png" alt="project-screenshot" width="1500" height="500/">
 <p>Membership</p>
-<img src="./public/img/membership.png" alt="project-screenshot" width="1500" height="400/">
+<img src="./public/img/membership.png" alt="project-screenshot" width="800" height="200/">
 <p>ExpenseTracker Home Page</p>
 <img src="./public/img/Expresstrackerentries.png" width="1500" height="400/">
 <p>Get password link</p>
-<img src="./public/img/getpassword.png" alt="project-screenshot" width="1500" height="400/">
+<img src="./public/img/getpassword.png" alt="project-screenshot" width="1500" height="500/">
 <p>Payment Gateway </p>
-<img src="./public/img/payment razorpay.png" alt="project-screenshot" width="1500" height="400/">
+<img src="./public/img/payment razorpay.png" alt="project-screenshot" width="1500" height="500/">
 <Acknowledgments></Acknowledgments>
-<img src="./public/img/Acknowledgement.png" alt="project-screenshot" width="1500" height="400/">
+<img src="./public/img/Acknowledgement.png" alt="project-screenshot" width="1500" height="500/">
 
   
   
