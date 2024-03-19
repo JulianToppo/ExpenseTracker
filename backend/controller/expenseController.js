@@ -9,7 +9,7 @@ const fileDownloaded = require("../model/filesDownloaded");
 const dotnet = require('dotenv').config();
 const conn = require('../util/connection')
 const User= require('../model/user');
-const { getAddProduct } = require("../../MongoDBPractice/controllers/admin");
+// const { getAddProduct } = require("../../MongoDBPractice/controllers/admin");
 
 exports.getExpensePage = (req, res, next) => {
     try {

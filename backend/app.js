@@ -74,7 +74,7 @@ app.use((req,res)=>{
 // })
 
 //mongoose implementation
-mongoose.connect("mongodb+srv://juliantoppo95:clusterpassword@expensetracker.lrvwpir.mongodb.net/expenseTracker?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://juliantoppo95:expensetracker@cluster0.znej4br.mongodb.net/")
 .then(()=>{
     app.listen(3000);
 })
