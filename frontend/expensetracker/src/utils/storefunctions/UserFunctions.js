@@ -8,6 +8,8 @@ import {
   updateProfileURL,
   resetPasswordEmail,
 } from "../firebase/constants";
+
+import {dbURL} from "../constants/constants"
 import { setLoginStatus ,setLogoutStatus} from "../store/authSlice";
 
 const UserFunctions = () => {
@@ -15,15 +17,15 @@ const UserFunctions = () => {
   const auth = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
-  const signUpFunc = async (email, password) => {
+  const signUpFunc = async (email, password,username) => {
     try {
       const formObj = {
         email: email,
         password: password,
-        returnSecureToken: true,
+        name: username
       };
 
-      const post = await fetch(firebaseSignupURL, {
+      const post = await fetch(dbURL+"/user/post", {
         method: "POST",
         body: JSON.stringify(formObj),
         headers: {

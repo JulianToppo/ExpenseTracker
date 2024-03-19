@@ -6,7 +6,7 @@ import UserFunctions from "../utils/storefunctions/UserFunctions";
 const SignUp = () => {
   const { loginUserFunc, signUpFunc } = UserFunctions();
   const [isLogin, setisLogin] = useState(false);
-  
+  const username = useRef();
   const email = useRef();
   const password = useRef();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const SignUp = () => {
     if (isLogin) {
       loginUserFunc(email.current.value, password.current.value);
     } else {
-      signUpFunc(email.current.value, password.current.value);
+      signUpFunc(email.current.value, password.current.value,username.current.value);
     }
   };
 
@@ -34,6 +34,17 @@ const SignUp = () => {
         <div>
           <h1 className="text-3xl">{isLogin ? "Login" : "SignUp"}</h1>
         </div>
+
+        {!isLogin && <div>
+          <label>Username</label>
+          <input
+            className="p-2 w-full  rounded-md"
+            ref={username}
+            type="username"
+            placeholder="Enter Username"
+            required
+          ></input>
+        </div> }
         <div>
           <label>Email</label>
           <input
