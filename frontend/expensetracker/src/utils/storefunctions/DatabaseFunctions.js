@@ -2,33 +2,36 @@ import React, { useEffect, useState } from "react";
 import { firebaseDBURL } from "../firebase/dbConstants";
 import { useSelector, useDispatch } from "react-redux";
 import { addExpenseRedx, deleteExpense, refreshSum, setExpense } from "../store/ExpenseSlice";
+import { dbURL } from "../constants/constants";
 
 const DatabaseFunctions = (props) => {
   const expenses = useSelector((store) => store.expenses);
   const auth = useSelector((store)=>store.auth)
-  console.log("authhh",auth.userId)
+  console.log("authhh",auth.idToken)
   const dispatch = useDispatch();
 
-  const getExpenses = async () => {
+  const getExpenses = async (pageNo,rowcount) => {
     try {
-      const post = await fetch(firebaseDBURL+ auth.userId + "/expenses"+".json", {
+      const post = await fetch(dbURL+'/expense/getExpense/pageNo/'+ pageNo+"/"+rowcount, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": auth.idToken
         },
       });
 
       const data = await post.json();
       if (post.ok) {
         console.log("Data from firebase successfully fetched");
-
-        console.log(data);
+      
+        console.log(data); 
+         console.log(data.ExpenseEntries)
         {
           
-          data && dispatch(setExpense(data));
+          data && dispatch(setExpense(data.ExpenseEntries));
         }
       } else {
-        throw new Error(data.error.message);
+        throw new Error(data.error);
       }
     } catch (error) {
       console.log(error);
@@ -37,11 +40,13 @@ const DatabaseFunctions = (props) => {
 
   const addExpenseFunc = async (formObj) => {
     try {
-      const post = await fetch(firebaseDBURL +auth.userId+ "/expenses"+".json", {
+      
+      const post = await fetch(dbURL +'/expense/addExpense', {
         method: "POST",
         body: JSON.stringify(formObj),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": auth.idToken 
         },
       });
 
@@ -50,7 +55,7 @@ const DatabaseFunctions = (props) => {
         console.log("Database entry successfully sent");
         console.log(data);
    
-        dispatch(addExpenseRedx({data,formObj}));
+        dispatch(addExpenseRedx({"data":data}));
         console.log("dispatch completed")
         return true;
       } else {
@@ -63,12 +68,14 @@ const DatabaseFunctions = (props) => {
 
   const deleteExpenseFunc = async (id) => {
     try {
+      let token= localStorage.getItem('token')
       console.log("deleteid",id)
-      const post = await fetch(firebaseDBURL + auth.userId+"/"+"expenses/"+  id + ".json", {
+      const post = await fetch(dbURL +"/expense/"+  id , {
         method: "DELETE",
 
         headers: {
           "Content-Type": "application/json",
+          "Authorization": token 
         },
       });
 

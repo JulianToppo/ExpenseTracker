@@ -37,7 +37,7 @@ const UserFunctions = () => {
       if (post.ok) {
         console.log(" User has successfully signed up.");
       } else {
-        throw new Error(data.error.message);
+        throw new Error(data.Error);
       }
     } catch (error) {
       alert(error)
@@ -174,11 +174,10 @@ const UserFunctions = () => {
     try {
       const formObj = {
         email: email,
-        password: password,
-        returnSecureToken: true,
+        password: password
       };
 
-      const post = await fetch(firebaseLoginURL, {
+      const post = await fetch(dbURL+'/login', {
         method: "POST",
         body: JSON.stringify(formObj),
         headers: {
@@ -188,15 +187,16 @@ const UserFunctions = () => {
 
       console.log(post);
       const data = await post.json();
+      console.log(data)
       if (post.ok) {
         console.log(" User has successfully logged in.");
         console.log(data);
-        localStorage.setItem("token", data.idToken);
+        localStorage.setItem("token", data.token);
         dispatch(setLoginStatus(data));
-        navigate("/verifymail");
+        navigate("/loginsuccess");
       } else {
-        console.log("data", data.error.message);
-        throw new Error(data.error.message);
+        console.log("data", data.Error);
+        throw new Error(data.Error);
       }
     } catch (error) {
       alert(error);

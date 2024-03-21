@@ -25,15 +25,16 @@ function App() {
 
   useEffect(() => {
     let token = localStorage.getItem("token");
+    
     if (!token) {
       navigate('/')
       return;
     }
     const getTokenAndUserID = async () => {
       try {
-         const data = await getUserDataFunc();
+        //  const data = await getUserDataFunc();
 
-      dispatch(setLoginStatus({ idToken: token, localId: data.localId })); 
+      dispatch(setLoginStatus({ 'token': token })); 
       } catch (error) {
         console.log(error)
       }

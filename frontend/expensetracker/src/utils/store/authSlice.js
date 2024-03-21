@@ -5,19 +5,20 @@ const authSlice = createSlice({
   initialState: {
     loginStatus: "false",
     idToken: "",
-    userId: "",
+   
   },
   reducers: {
     setLoginStatus:(state, action)=>{
-      const { idToken, localId } = action.payload;
+      const { token } = action.payload;
+      
       state.loginStatus = true;
-      state.idToken = idToken;
-      state.userId = localId;
+      state.idToken = token;
+      
     },
     setLogoutStatus:(state)=> {
       state.loginStatus = false;
       state.idToken = "";
-      state.userId = "";
+    
     },
   },
 });

@@ -8,14 +8,18 @@ const ExpenseSlice = createSlice({
   },
   reducers: {
     addExpenseRedx: (state, action) => {
-      const { data, formObj } = action.payload;
-      state.totalExpense = state.totalExpense + parseInt(formObj.price);
-      state.expenses = { ...state.expenses, [data["name"]]: formObj };
+      const { data } = action.payload;
+      state.totalExpense = data.totalExpense;
+      state.expenses = { [data.NewExpenseEntry._id]: data.NewExpenseEntry, ...state.expenses};
     },
     setExpense: (state, action) => {
-      state.expenses = action.payload;
+      state.expenses = action.payload.map((item)=>{
+        return {[item._id]:item}
+      }).reduce((acc,item)=>{
+        return {...acc,...item}
+      },{});
       state.totalExpense = Object.values(action.payload).reduce(
-        (total, item) => total + parseInt(item.price),
+        (total, item) => total + parseInt(item.expenseAmount),
         0
       );
     },

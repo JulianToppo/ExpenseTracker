@@ -57,7 +57,7 @@ exports.addExpense = async (req, res, next) => {
                 return product.save();
             }).then(async ()=>{
                 await session.commitTransaction();
-                res.status(201).json({ NewExpenseEntry: data, success: "true" });
+                res.status(201).json({ NewExpenseEntry: data,totalExpense:totalExpense, success: "true" });
             })
         }
     } catch (err) {
@@ -89,14 +89,14 @@ exports.getExpense = async (req, res, next) => {
         //     offset: (Number(pageNo) - 1) * Number(rowCount)
         // });
 
-        const data = await Expense.find({ userId: req.user._id })
+        const data = await Expense.find({ userId: req.user._id }).sort({_id:-1})
         .limit(rowCount)
         .skip((Number(pageNo) - 1) * Number(rowCount))
         .exec();
             
 
         console.log("expenseEntreis", data)
-        res.status(200).json({
+        res.status(200).json({totalExpense:req.user.totalExpense,
             ExpenseEntries: data, paginationValues: {
                 currpage: pageNo,
                 hasNext: Number(pageNo) < lastPage,

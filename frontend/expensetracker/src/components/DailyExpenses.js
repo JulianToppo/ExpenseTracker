@@ -20,6 +20,8 @@ const DailyExpenses = () => {
   const desc = useRef();
   const price = useRef();
   const category = useRef();
+  const pageNo=  useRef();
+  const [rowCount,setRowCount] = useState(3);
 
   const expenseCategories = [
     "Housing",
@@ -45,16 +47,16 @@ const DailyExpenses = () => {
   }, [expensesStr.expenses]);
 
   useEffect(() => {
-    if(auth.userId){
-      getExpenses();
+    if(auth.idToken && rowCount){
+      getExpenses(1,rowCount);
     }
     
-  }, [auth.userId]);
+  }, [auth.idToken,rowCount]);
 
   const addNewEntry = async () => {
     const formObj = {
       description: desc.current.value,
-      price: price.current.value,
+      expenseAmount: price.current.value,
       category: category.current.value,
     };
 
@@ -132,7 +134,14 @@ const DailyExpenses = () => {
   return (
     <div className="flex flex-col items-center justify-center w-5/6 mx-auto p-4 rounded-xl bg-slate-400">
       <div className="p-2 bg-slate-500 w-full rounded-md">
+        
+        <select defaultValue="3" onChange={(e)=>setRowCount(e.target.value)} required>
+          <option key="3" value='3'>3</option>
+          <option key="5" value='5'>5</option>
+          <option key="10" value='10'>10</option>
+        </select>
         {/* form */}
+
         <form
           onSubmit={onSubmitHandler}
           className="flex rounded-lg flex-row space-x-3 "
@@ -202,9 +211,9 @@ const DailyExpenses = () => {
               </td>
             </tr>
             {Object.entries(expenses).map(([key, value]) => (
-              <tr id={key} key={key}>
+              <tr id={value._id} key={value._id}>
                 <td>{value.description}</td>
-                <td>{value.price}</td>
+                <td>{value.expenseAmount}</td>
                 <td>{value.category}</td>
 
                 <td>
