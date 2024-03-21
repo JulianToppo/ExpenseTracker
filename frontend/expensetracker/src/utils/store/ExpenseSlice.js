@@ -32,7 +32,7 @@ const ExpenseSlice = createSlice({
       );
 
       state.totalExpense = Object.values(state.expenses).reduce(
-        (total, item) => total + parseInt(item.price),
+        (total, item) => total + parseInt(item.expenseAmount),
         0
       );
     },

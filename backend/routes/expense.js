@@ -15,6 +15,6 @@ router.delete("/:expenseId",authorization.authorizationUser,expenseController.de
 // router.get("/showReports",authorization.authorizationUser,expenseController.showReports)
 router.get("/user/download",authorization.authorizationUser,expenseController.downloadExpense);
 router.get("/getDownloadedFiles",authorization.authorizationUser,expenseController.getDownloadedFiles);
-
+router.put("/expenses/edit/:id",authorization.authorizationUser,expenseController.editExpense);
 
 module.exports=router;

@@ -68,14 +68,14 @@ const DatabaseFunctions = (props) => {
 
   const deleteExpenseFunc = async (id) => {
     try {
-      let token= localStorage.getItem('token')
+  
       console.log("deleteid",id)
       const post = await fetch(dbURL +"/expense/"+  id , {
         method: "DELETE",
 
         headers: {
           "Content-Type": "application/json",
-          "Authorization": token 
+          "Authorization": auth.idToken
         },
       });
 
@@ -95,11 +95,12 @@ const DatabaseFunctions = (props) => {
 
   const editExpenseFunc = async (id, formObj) => {
     try {
-      const post = await fetch(firebaseDBURL +auth.userId+"/" +"expenses/" + id + ".json", {
+      const post = await fetch(dbURL +"/expense/expenses/edit/"+id, {
         method: "PUT",
         body: JSON.stringify(formObj),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": auth.idToken
         },
       });
 
@@ -107,7 +108,7 @@ const DatabaseFunctions = (props) => {
 
       if (post.ok) {
         console.log("Database entry successfully edited");
-        getExpenses();
+        getExpenses('1','5');
       } else {
         throw new Error(data.error.message);
       }

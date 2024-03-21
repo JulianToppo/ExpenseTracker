@@ -71,7 +71,7 @@ const DailyExpenses = () => {
     
     const formObj = {
       description: desc.current.value,
-      price: price.current.value,
+      expenseAmount: price.current.value,
       category: category.current.value,
     };
 

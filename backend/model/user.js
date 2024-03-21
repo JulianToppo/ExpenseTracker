@@ -103,5 +103,6 @@ userSchema.methods.deleteExpenseEntry = function (expenseId) {
 }
 
 
+
 let User = mongoose.model('User', userSchema);
 module.exports = User;

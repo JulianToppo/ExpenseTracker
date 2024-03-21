@@ -142,6 +142,36 @@ exports.deleteExpense = async (req, res, next) => {
     session.endSession();
 }
 
+exports.editExpense = async(req,res,next)=>{
+    const session = await conn.startSession();
+    try {
+        console.log("inside edit expense function");
+        session.startTransaction();
+        const expenseId= req.params.id
+        const {expenseAmount} = req.body;
+        console.log(expenseId)
+        const expense = await Expense.findById(expenseId);
+        expense.expenseAmount= expenseAmount;
+        await expense.save();
+
+        const totalExpense = (+req.user.totalExpense) - (+expense.expenseAmount);
+        req.user.totalExpense=totalExpense;
+        await req.user.save();
+        // const data = await Expense.findByIdAndDelete(expenseId,{session:session});
+        // await req.user.deleteExpenseEntry(expenseId,{session:session})
+        await session.commitTransaction();
+        res.status(200).json({ message: "Expense updated successfully" });
+       
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500)
+            .json({
+                error: err
+            })
+    }
+    session.endSession();
+}
+
 // exports.showReports= async (req,res,next)=>{
 //     try {
 //         res.sendFile(path.join(__dirname,"..","view","dayToDayExpenses.html"));
