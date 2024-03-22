@@ -28,7 +28,7 @@ const DatabaseFunctions = (props) => {
          console.log(data.ExpenseEntries)
         {
           
-          data && dispatch(setExpense(data.ExpenseEntries));
+          data && dispatch(setExpense({"entries":data.ExpenseEntries,"pagination":data.paginationValues}));
         }
       } else {
         throw new Error(data.error);
@@ -54,8 +54,8 @@ const DatabaseFunctions = (props) => {
       if (post.ok) {
         console.log("Database entry successfully sent");
         console.log(data);
-   
-        dispatch(addExpenseRedx({"data":data}));
+        // getExpenses(1,5)
+        // dispatch(addExpenseRedx({"data":data}));
         console.log("dispatch completed")
         return true;
       } else {

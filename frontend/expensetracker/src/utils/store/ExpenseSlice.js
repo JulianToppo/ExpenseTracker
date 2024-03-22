@@ -5,23 +5,27 @@ const ExpenseSlice = createSlice({
   initialState: {
     expenses: {},
     totalExpense: 0,
+    paginationValues:{},
   },
   reducers: {
     addExpenseRedx: (state, action) => {
       const { data } = action.payload;
       state.totalExpense = data.totalExpense;
       state.expenses = { [data.NewExpenseEntry._id]: data.NewExpenseEntry, ...state.expenses};
+     
     },
     setExpense: (state, action) => {
-      state.expenses = action.payload.map((item)=>{
+      const {pagination,entries}=action.payload;
+      state.expenses = entries.map((item)=>{
         return {[item._id]:item}
       }).reduce((acc,item)=>{
         return {...acc,...item}
       },{});
-      state.totalExpense = Object.values(action.payload).reduce(
+      state.totalExpense = Object.values(entries).reduce(
         (total, item) => total + parseInt(item.expenseAmount),
         0
       );
+      state.paginationValues=pagination
     },
     deleteExpense: (state, action) => {
       let {id}=action.payload

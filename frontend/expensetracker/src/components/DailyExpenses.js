@@ -16,12 +16,13 @@ const DailyExpenses = () => {
     status: false,
   });
 
-  const [totalExpense,settotalExpense]=useState(0)
+  const [totalExpense, settotalExpense] = useState(0);
   const desc = useRef();
   const price = useRef();
   const category = useRef();
-  const pageNo=  useRef();
-  const [rowCount,setRowCount] = useState(3);
+  const pageNo = useRef();
+  const [rowCount, setRowCount] = useState(3);
+  const [currpage,setCurrPage]=useState(1);
 
   const expenseCategories = [
     "Housing",
@@ -43,15 +44,14 @@ const DailyExpenses = () => {
   useEffect(() => {
     console.log("changes in expenseslice", expensesStr.expenses);
     setExpenses(expensesStr.expenses);
-    settotalExpense(expensesStr.totalExpense)
+    settotalExpense(expensesStr.totalExpense);
   }, [expensesStr.expenses]);
 
   useEffect(() => {
-    if(auth.idToken && rowCount){
-      getExpenses(1,rowCount);
+    if (auth.idToken && rowCount) {
+      getExpenses(1, rowCount);
     }
-    
-  }, [auth.idToken,rowCount]);
+  }, [auth.idToken, rowCount]);
 
   const addNewEntry = async () => {
     const formObj = {
@@ -60,7 +60,8 @@ const DailyExpenses = () => {
       category: category.current.value,
     };
 
-    addExpenseFunc(formObj);
+    await addExpenseFunc(formObj);
+    await getExpenses(1,rowCount)
     // Clear input fields after submission
     desc.current.value = "";
     price.current.value = "";
@@ -68,7 +69,6 @@ const DailyExpenses = () => {
   };
 
   const updateEntry = () => {
-    
     const formObj = {
       description: desc.current.value,
       expenseAmount: price.current.value,
@@ -104,8 +104,8 @@ const DailyExpenses = () => {
     // setIsUpdate(!isUpdate);
     // console.log(e);
     const id = e.target.parentElement.parentElement.attributes.id.value;
-   await deleteExpenseFunc(id)
-
+    await deleteExpenseFunc(id);
+    await getExpenses(currpage,rowCount)
   };
 
   const onEditHandler = (e) => {
@@ -131,15 +131,14 @@ const DailyExpenses = () => {
     dispatch(downloadExpenses());
   };
 
+  const onPageChange = (e)=>{
+   
+    getExpenses(e.target.value,rowCount)
+    setCurrPage(e.target.value)
+  }
   return (
     <div className="flex flex-col items-center justify-center w-5/6 mx-auto p-4 rounded-xl bg-slate-400">
       <div className="p-2 bg-slate-500 w-full rounded-md">
-        
-        <select defaultValue="3" onChange={(e)=>setRowCount(e.target.value)} required>
-          <option key="3" value='3'>3</option>
-          <option key="5" value='5'>5</option>
-          <option key="10" value='10'>10</option>
-        </select>
         {/* form */}
 
         <form
@@ -166,7 +165,27 @@ const DailyExpenses = () => {
           </button>
         </form>
       </div>
-      <div className="bg-slate-400   flex items-center justify-center w-full rounded-md">
+      {/* No of expenses */}
+      <div className="bg-blue-200 m-2 p-2 self-center flex w-full rounded-md justify-center">
+        <h1>No of expense rows:</h1>
+        <select
+          defaultValue="3"
+          onChange={(e) => setRowCount(e.target.value)}
+          required
+        >
+          <option key="3" value="3">
+            3
+          </option>
+          <option key="5" value="5">
+            5
+          </option>
+          <option key="10" value="10">
+            10
+          </option>
+        </select>
+      </div>
+      {/* Show Expenses */}
+      <div className="bg-slate-400   flex flex-col items-center justify-center w-full rounded-md">
         <table className="table-auto w-full p-4 text-center">
           <thead>
             <tr>
@@ -191,18 +210,22 @@ const DailyExpenses = () => {
             <tr>
               <td /> <td />{" "}
               <td>
-                {ispremium && <button
-                  className="bg-blue-300 p-4 rounded-lg"
-                  onClick={onDownloadClick}
-                >
-                  Export CSV{" "}
-                </button>}
-                
+                {ispremium && (
+                  <button
+                    className="bg-blue-300 p-4 rounded-lg"
+                    onClick={onDownloadClick}
+                  >
+                    Export CSV{" "}
+                  </button>
+                )}
               </td>{" "}
               <td />
               <td>
                 {totalExpense > 10000 ? (
-                  <button className="bg-blue-300 p-4 rounded-lg" onClick={()=>setisPremium(true)}>
+                  <button
+                    className="bg-blue-300 p-4 rounded-lg"
+                    onClick={() => setisPremium(true)}
+                  >
                     Add Premium
                   </button>
                 ) : (
@@ -234,8 +257,21 @@ const DailyExpenses = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>  {/* Pagination 
+          currpage: pageNo,
+                hasNext: Number(pageNo) < lastPage,
+                next: Number(pageNo) + 1,
+                hasPrevious: pageNo > 1,
+                previous: pageNo - 1,
+                last: lastPage*/}
+        <div className="m-2">
+          {expensesStr.paginationValues.hasPrevious && <button  className="p-2 border border-2" value={expensesStr.paginationValues.previous}onClick={onPageChange}>{expensesStr.paginationValues.previous }</button>}
+          {expensesStr.paginationValues.currpage && <button  className="p-2 border border-2 bg-green-400 text-2xl" value={expensesStr.paginationValues.currpage} onClick={onPageChange}>{expensesStr.paginationValues.currpage }</button>}
+          {expensesStr.paginationValues.hasNext && <button  className="p-2 border border-2" value={expensesStr.paginationValues.next} onClick={onPageChange}>{expensesStr.paginationValues.next }</button>}
+          {(expensesStr.paginationValues.last!=expensesStr.paginationValues.next) && (expensesStr.paginationValues.last!=expensesStr.paginationValues.currpage)  && <button  value={expensesStr.paginationValues.last} className="p-2 border border-2" onClick={onPageChange}>{expensesStr.paginationValues.last }</button>}
+        </div>
       </div>
+    
     </div>
   );
 };
