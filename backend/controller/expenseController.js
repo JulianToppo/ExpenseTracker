@@ -104,7 +104,8 @@ exports.getExpense = async (req, res, next) => {
                 hasPrevious: pageNo > 1,
                 previous: pageNo - 1,
                 last: lastPage
-            }
+            },
+            "ispremiumUser":req.user.ispremiumuser
         })
     } catch (err) {
         res.status(500).json({ Error: err });
@@ -130,7 +131,7 @@ exports.deleteExpense = async (req, res, next) => {
         const data = await Expense.findByIdAndDelete(expenseId,{session:session});
         await req.user.deleteExpenseEntry(expenseId,{session:session})
         await session.commitTransaction();
-        res.status(200).json({ Delete: data });
+        res.status(200).json({ Delete: data,totalExpense:totalExpense });
        
     } catch (err) {
         await session.abortTransaction();
@@ -187,7 +188,7 @@ function uploadToS3(data, filename) {
     const IAM_USER_KEY = process.env.IAM_USER_KEY;
     const IAM_USER_SECRET = process.env.IAM_USER_SECRET
 
-    console.log(BUCKET_NAME);
+    console.log("bucketname",BUCKET_NAME);
     var s3bucket = new AWS.S3({
         accessKeyId: IAM_USER_KEY,
         secretAccessKey: IAM_USER_SECRET,

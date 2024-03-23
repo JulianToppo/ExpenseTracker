@@ -15,30 +15,24 @@ const ExpenseSlice = createSlice({
      
     },
     setExpense: (state, action) => {
-      const {pagination,entries}=action.payload;
+      const {pagination,entries,totalExpense}=action.payload;
       state.expenses = entries.map((item)=>{
         return {[item._id]:item}
       }).reduce((acc,item)=>{
         return {...acc,...item}
       },{});
-      state.totalExpense = Object.values(entries).reduce(
-        (total, item) => total + parseInt(item.expenseAmount),
-        0
-      );
+      state.totalExpense = totalExpense
       state.paginationValues=pagination
     },
     deleteExpense: (state, action) => {
-      let {id}=action.payload
+      let {id,totalExpense}=action.payload
       state.expenses = Object.fromEntries(
         Object.entries(state.expenses).filter(([key, value]) => {
           return id != key;
         })
       );
 
-      state.totalExpense = Object.values(state.expenses).reduce(
-        (total, item) => total + parseInt(item.expenseAmount),
-        0
-      );
+      state.totalExpense =totalExpense;
     },
 
     downloadExpenses: (state) => {

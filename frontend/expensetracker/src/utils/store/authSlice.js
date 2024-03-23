@@ -5,6 +5,7 @@ const authSlice = createSlice({
   initialState: {
     loginStatus: "false",
     idToken: "",
+    ispremium:false
    
   },
   reducers: {
@@ -15,13 +16,20 @@ const authSlice = createSlice({
       state.idToken = token;
       
     },
+
     setLogoutStatus:(state)=> {
       state.loginStatus = false;
       state.idToken = "";
+      state.ispremium=false
     
     },
+
+    setPremiumStatus: (state,action)=>{
+      const {ispremium}=action.payload
+      state.ispremium=ispremium;
+    }
   },
 });
 
-export const { setLoginStatus, setLogoutStatus } = authSlice.actions;
+export const { setLoginStatus, setLogoutStatus ,setPremiumStatus} = authSlice.actions;
 export default authSlice.reducer;

@@ -3,6 +3,7 @@ import { firebaseDBURL } from "../firebase/dbConstants";
 import { useSelector, useDispatch } from "react-redux";
 import { addExpenseRedx, deleteExpense, refreshSum, setExpense } from "../store/ExpenseSlice";
 import { dbURL } from "../constants/constants";
+import { setPremiumStatus } from "../store/authSlice";
 
 const DatabaseFunctions = (props) => {
   const expenses = useSelector((store) => store.expenses);
@@ -28,7 +29,8 @@ const DatabaseFunctions = (props) => {
          console.log(data.ExpenseEntries)
         {
           
-          data && dispatch(setExpense({"entries":data.ExpenseEntries,"pagination":data.paginationValues}));
+          data && dispatch(setExpense({"entries":data.ExpenseEntries,"pagination":data.paginationValues,"totalExpense":data.totalExpense}));
+          dispatch(setPremiumStatus({"ispremium":data.ispremiumUser}))
         }
       } else {
         throw new Error(data.error);
@@ -83,7 +85,7 @@ const DatabaseFunctions = (props) => {
       console.log(post);
       if (post.ok) {
         console.log("Database entry successfully deleted");
-       dispatch(deleteExpense({"id":id}))
+       dispatch(deleteExpense({"id":id,"totalExpense":data.totalExpense}))
         return true;
       } else {
         throw new Error(data.error.message);

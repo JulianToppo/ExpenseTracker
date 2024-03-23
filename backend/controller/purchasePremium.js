@@ -7,7 +7,7 @@ const Razorpay = require('razorpay');
 const purchasepremium =async (req, res) => {
     try {
         console.log("purchase premium entered");
-       // console.log("cwd",process.env.RAZORPAY_KEY_ID);
+       console.log("cwd",process.env.RAZORPAY_KEY_ID);
         // console.log("environment",process.env);
 
         var rzp = new Razorpay({
@@ -16,13 +16,13 @@ const purchasepremium =async (req, res) => {
         })
         const amount = 2500;
 
-        rzp.orders.create({amount, currency: "INR"}, (err, order) => {
+       await rzp.orders.create({amount, currency: "INR"}, (err, order) => {
             if(err) {
                 throw new Error(JSON.stringify(err));
             }
             console.log("razorpay order")
             Order.create({userId:req.user._id,paymentid:'', orderid: order.id, status: 'PENDING'}).then(() => {
-                return res.status(201).json({ order, key_id : rzp.key_id});
+                return res.status(201).json({ "order":order, key_id : rzp.key_id});
 
             }).catch(err => {
                 throw new Error(err)

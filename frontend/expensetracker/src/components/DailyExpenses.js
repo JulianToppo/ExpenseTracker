@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DatabaseFunctions from "../utils/storefunctions/DatabaseFunctions";
 import { downloadExpenses } from "../utils/store/ExpenseSlice";
+import UserFunctions from "../utils/storefunctions/UserFunctions";
 
 const DailyExpenses = () => {
   const { getExpenses, addExpenseFunc, deleteExpenseFunc, editExpenseFunc } =
     DatabaseFunctions();
+
+  const { buyPremiumMembership } = UserFunctions();
   const expensesStr = useSelector((store) => store.expenses);
   const auth = useSelector((store) => store.auth);
   const dispatch = useDispatch();
-  const [ispremium, setisPremium] = useState(false);
+
   const [expenses, setExpenses] = useState({});
   const [isUpdate, setIsUpdate] = useState({
     id: "",
@@ -22,7 +25,7 @@ const DailyExpenses = () => {
   const category = useRef();
   const pageNo = useRef();
   const [rowCount, setRowCount] = useState(3);
-  const [currpage,setCurrPage]=useState(1);
+  const [currpage, setCurrPage] = useState(1);
 
   const expenseCategories = [
     "Housing",
@@ -61,7 +64,7 @@ const DailyExpenses = () => {
     };
 
     await addExpenseFunc(formObj);
-    await getExpenses(1,rowCount)
+    await getExpenses(1, rowCount);
     // Clear input fields after submission
     desc.current.value = "";
     price.current.value = "";
@@ -105,7 +108,7 @@ const DailyExpenses = () => {
     // console.log(e);
     const id = e.target.parentElement.parentElement.attributes.id.value;
     await deleteExpenseFunc(id);
-    await getExpenses(currpage,rowCount)
+    await getExpenses(currpage, rowCount);
   };
 
   const onEditHandler = (e) => {
@@ -131,11 +134,15 @@ const DailyExpenses = () => {
     dispatch(downloadExpenses());
   };
 
-  const onPageChange = (e)=>{
-   
-    getExpenses(e.target.value,rowCount)
-    setCurrPage(e.target.value)
-  }
+  const onPageChange = (e) => {
+    getExpenses(e.target.value, rowCount);
+    setCurrPage(e.target.value);
+  };
+
+  const onAddPremiumHandler = async () => {
+    buyPremiumMembership();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-5/6 mx-auto p-4 rounded-xl bg-slate-400">
       <div className="p-2 bg-slate-500 w-full rounded-md">
@@ -210,7 +217,7 @@ const DailyExpenses = () => {
             <tr>
               <td /> <td />{" "}
               <td>
-                {ispremium && (
+                {auth.ispremium && (
                   <button
                     className="bg-blue-300 p-4 rounded-lg"
                     onClick={onDownloadClick}
@@ -221,10 +228,15 @@ const DailyExpenses = () => {
               </td>{" "}
               <td />
               <td>
-                {totalExpense > 10000 ? (
+                {auth.ispremium == true ? (
+                  <div>
+                    <p className="bg-green-200">You are a premium member:</p>
+                    <p>{totalExpense}</p>
+                  </div>
+                ) : totalExpense > 10000 ? (
                   <button
                     className="bg-blue-300 p-4 rounded-lg"
-                    onClick={() => setisPremium(true)}
+                    onClick={onAddPremiumHandler}
                   >
                     Add Premium
                   </button>
@@ -257,7 +269,8 @@ const DailyExpenses = () => {
               </tr>
             ))}
           </tbody>
-        </table>  {/* Pagination 
+        </table>{" "}
+        {/* Pagination 
           currpage: pageNo,
                 hasNext: Number(pageNo) < lastPage,
                 next: Number(pageNo) + 1,
@@ -265,13 +278,48 @@ const DailyExpenses = () => {
                 previous: pageNo - 1,
                 last: lastPage*/}
         <div className="m-2">
-          {expensesStr.paginationValues.hasPrevious && <button  className="p-2 border border-2" value={expensesStr.paginationValues.previous}onClick={onPageChange}>{expensesStr.paginationValues.previous }</button>}
-          {expensesStr.paginationValues.currpage && <button  className="p-2 border border-2 bg-green-400 text-2xl" value={expensesStr.paginationValues.currpage} onClick={onPageChange}>{expensesStr.paginationValues.currpage }</button>}
-          {expensesStr.paginationValues.hasNext && <button  className="p-2 border border-2" value={expensesStr.paginationValues.next} onClick={onPageChange}>{expensesStr.paginationValues.next }</button>}
-          {(expensesStr.paginationValues.last!=expensesStr.paginationValues.next) && (expensesStr.paginationValues.last!=expensesStr.paginationValues.currpage)  && <button  value={expensesStr.paginationValues.last} className="p-2 border border-2" onClick={onPageChange}>{expensesStr.paginationValues.last }</button>}
+          {expensesStr.paginationValues.hasPrevious && (
+            <button
+              className="p-2 border border-2"
+              value={expensesStr.paginationValues.previous}
+              onClick={onPageChange}
+            >
+              {expensesStr.paginationValues.previous}
+            </button>
+          )}
+          {expensesStr.paginationValues.currpage && (
+            <button
+              className="p-2 border border-2 bg-green-400 text-2xl"
+              value={expensesStr.paginationValues.currpage}
+              onClick={onPageChange}
+            >
+              {expensesStr.paginationValues.currpage}
+            </button>
+          )}
+          {expensesStr.paginationValues.hasNext && (
+            <button
+              className="p-2 border border-2"
+              value={expensesStr.paginationValues.next}
+              onClick={onPageChange}
+            >
+              {expensesStr.paginationValues.next}
+            </button>
+          )}
+          {expensesStr.paginationValues.last > 1 &&
+            expensesStr.paginationValues.last !=
+              expensesStr.paginationValues.next &&
+            expensesStr.paginationValues.last !=
+              expensesStr.paginationValues.currpage && (
+              <button
+                value={expensesStr.paginationValues.last}
+                className="p-2 border border-2"
+                onClick={onPageChange}
+              >
+                {expensesStr.paginationValues.last}
+              </button>
+            )}
         </div>
       </div>
-    
     </div>
   );
 };
