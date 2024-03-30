@@ -5,34 +5,39 @@ const ExpenseSlice = createSlice({
   initialState: {
     expenses: {},
     totalExpense: 0,
-    paginationValues:{},
+    paginationValues: {},
+    downloadedExpenseLinks:[],
   },
   reducers: {
     addExpenseRedx: (state, action) => {
       const { data } = action.payload;
       state.totalExpense = data.totalExpense;
-      state.expenses = { [data.NewExpenseEntry._id]: data.NewExpenseEntry, ...state.expenses};
-     
+      state.expenses = {
+        [data.NewExpenseEntry._id]: data.NewExpenseEntry,
+        ...state.expenses,
+      };
     },
     setExpense: (state, action) => {
-      const {pagination,entries,totalExpense}=action.payload;
-      state.expenses = entries.map((item)=>{
-        return {[item._id]:item}
-      }).reduce((acc,item)=>{
-        return {...acc,...item}
-      },{});
-      state.totalExpense = totalExpense
-      state.paginationValues=pagination
+      const { pagination, entries, totalExpense } = action.payload;
+      state.expenses = entries
+        .map((item) => {
+          return { [item._id]: item };
+        })
+        .reduce((acc, item) => {
+          return { ...acc, ...item };
+        }, {});
+      state.totalExpense = totalExpense;
+      state.paginationValues = pagination;
     },
     deleteExpense: (state, action) => {
-      let {id,totalExpense}=action.payload
+      let { id, totalExpense } = action.payload;
       state.expenses = Object.fromEntries(
         Object.entries(state.expenses).filter(([key, value]) => {
           return id != key;
         })
       );
 
-      state.totalExpense =totalExpense;
+      state.totalExpense = totalExpense;
     },
 
     downloadExpenses: (state) => {
@@ -54,9 +59,19 @@ const ExpenseSlice = createSlice({
 
       downloadBlob(values, "export.csv", "text/csv;charset=utf-8;");
     },
+
+    setDownloadExpenses: (state, action) => {
+      const { results } = action.payload;
+      state.downloadedExpenseLinks=results.DownloadedFiles;
+    },
   },
 });
 
-export const { addExpenseRedx, setExpense, downloadExpenses,deleteExpense } =
-  ExpenseSlice.actions;
+export const {
+  addExpenseRedx,
+  setExpense,
+  downloadExpenses,
+  deleteExpense,
+  setDownloadExpenses,
+} = ExpenseSlice.actions;
 export default ExpenseSlice.reducer;

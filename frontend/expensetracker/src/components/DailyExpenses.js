@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import DatabaseFunctions from "../utils/storefunctions/DatabaseFunctions";
 import { downloadExpenses } from "../utils/store/ExpenseSlice";
 import UserFunctions from "../utils/storefunctions/UserFunctions";
+import DownloadedFiles from "./DownloadedFiles";
 
 const DailyExpenses = () => {
   const { getExpenses, addExpenseFunc, deleteExpenseFunc, editExpenseFunc } =
     DatabaseFunctions();
 
-  const { buyPremiumMembership } = UserFunctions();
+  const { buyPremiumMembership,downloadFile } = UserFunctions();
   const expensesStr = useSelector((store) => store.expenses);
   const auth = useSelector((store) => store.auth);
   const dispatch = useDispatch();
@@ -131,7 +132,8 @@ const DailyExpenses = () => {
 
   const onDownloadClick = (e) => {
     e.preventDefault();
-    dispatch(downloadExpenses());
+    // dispatch(downloadExpenses());
+    downloadFile();
   };
 
   const onPageChange = (e) => {
@@ -320,6 +322,10 @@ const DailyExpenses = () => {
             )}
         </div>
       </div>
+      {/* Downloaded Files */}
+      {
+        auth.ispremium && <DownloadedFiles/>
+      } 
     </div>
   );
 };

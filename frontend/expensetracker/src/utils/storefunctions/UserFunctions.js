@@ -12,7 +12,12 @@ import {
 } from "../firebase/constants";
 
 import { dbURL } from "../constants/constants";
-import { setLoginStatus, setLogoutStatus, setPremiumStatus } from "../store/authSlice";
+import {
+  setLoginStatus,
+  setLogoutStatus,
+  setPremiumStatus,
+} from "../store/authSlice";
+import { downloadExpenses, setDownloadExpenses } from "../store/ExpenseSlice";
 
 const UserFunctions = () => {
   const [Razorpay] = useRazorpay();
@@ -269,8 +274,7 @@ const UserFunctions = () => {
 
   const buyPremiumMembership = async () => {
     try {
-   
-      const response = await fetch(dbURL+"/purchase/premiummembership", {
+      const response = await fetch(dbURL + "/purchase/premiummembership", {
         method: "GET",
         headers: {
           Authorization: auth.idToken,
@@ -281,25 +285,27 @@ const UserFunctions = () => {
         throw new Error("Failed to fetch premium membership data");
       }
 
-       const responseData = await response.json();
-      
+      const responseData = await response.json();
 
       const options = {
         key: responseData.key_id,
         order_id: responseData.order.id,
         handler: async function (response) {
           try {
-            const res = await fetch(dbURL+"/purchase/updatetransactionstatus", {
-              method: "POST",
-              headers: {
-                Authorization: auth.idToken,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                order_id: options.order_id,
-                payment_id: response.razorpay_payment_id,
-              }),
-            });
+            const res = await fetch(
+              dbURL + "/purchase/updatetransactionstatus",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: auth.idToken,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  order_id: options.order_id,
+                  payment_id: response.razorpay_payment_id,
+                }),
+              }
+            );
 
             if (!res.ok) {
               throw new Error("Failed to update transaction status");
@@ -308,14 +314,13 @@ const UserFunctions = () => {
             const resData = await res.json();
             console.log(resData);
             alert("You are a Premium User Now");
-            dispatch(setPremiumStatus({"ispremium":res.ok}))
+            dispatch(setPremiumStatus({ ispremium: res.ok }));
             // document.getElementById("buyMembership").style.display = "none";
             // document.getElementById("message").innerHTML =
             //   "You are a premium user";
             localStorage.setItem("token", resData.token);
             // showLeaderboard();
             // showDaily_Monthly_YearlyExpense();
-            
           } catch (error) {
             console.error(error);
             alert("Failed to update transaction status");
@@ -325,19 +330,50 @@ const UserFunctions = () => {
 
       const rzp1 = new Razorpay(options);
       rzp1.open();
-   
 
       rzp1.on("payment.failed", function (response) {
         console.log(response);
         alert("Something went wrong");
-      
       });
-
-      
     } catch (error) {
       console.error(error);
     }
   };
+
+  const loadDownloadedFiles = async () => {
+    try {
+      const data = await fetch(dbURL + "/expense/getDownloadedFiles", {
+        method: "GET",
+        headers: {
+          Authorization: auth.idToken,
+        },
+      });
+
+      const res = await data.json();
+      dispatch(setDownloadExpenses({results:res}))
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //Download file
+  const downloadFile = async ()=>{
+    
+    try {
+      const data= await fetch(dbURL+"/expense/user/download", {method:'GET', headers: { "Authorization": auth.idToken } });
+      const res=await data.json();
+      console.log(res);
+      dispatch(downloadExpenses())
+      loadDownloadedFiles()
+    } catch (error) {
+      console.log(error)
+    }
+   
+         
+     
+  
+  }
 
   return {
     signUpFunc,
@@ -348,6 +384,8 @@ const UserFunctions = () => {
     ForgotPasswordFunc,
     loginUserFunc,
     buyPremiumMembership,
+    loadDownloadedFiles,
+    downloadFile
   };
 };
 
