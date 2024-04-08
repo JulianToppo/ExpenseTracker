@@ -57,6 +57,38 @@ Here're some of the project's best features:
 *   Buy Membership
 *   LeaderBoard (Compare total prices among different users)
 
+
+## Setting Up Environment Variables
+
+Before running the application, you need to set up the following environment variables:
+
+1. **RAZORPAY_KEY_ID:** Your Razorpay Key ID.
+2. **RAZORPAY_KEY_SECRET:** Your Razorpay Key Secret.
+3. **IAM_USER_KEY:** Your IAM User Key for AWS S3.
+4. **IAM_USER_SECRET:** Your IAM User Secret for AWS S3.
+5. **BUCKET_NAME:** The name of your AWS S3 bucket.
+6. **API_KEY:** Your API Key for accessing external services.
+7. **HOST_IPADDRESS:** The IP address of the host where your application is running.
+
+To set these environment variables:
+
+1. Create a file named `.env` in the root directory of the project(backend folder).
+2. Copy the following lines into the `.env` file and replace the placeholder values with your actual credentials:
+
+    ```plaintext
+    RAZORPAY_KEY_ID='your-razorpay-key-id'
+    RAZORPAY_KEY_SECRET='your-razorpay-key-secret'
+    IAM_USER_KEY='your-iam-user-key'
+    IAM_USER_SECRET='your-iam-user-secret'
+    BUCKET_NAME='your-s3-bucket-name'
+    API_KEY='your-api-key'
+    HOST_IPADDRESS='http://localhost:3001'
+    ```
+
+3. Save the `.env` file.
+
+Now, your environment is configured, and you can proceed to run the application.
+
 <h2>🛠️ Installation Steps:</h2>
 
 <p>1. Clone the repository</p>
