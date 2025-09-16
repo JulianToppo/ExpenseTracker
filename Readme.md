@@ -1,9 +1,9 @@
 
-<h1 align="center" id="title">Expense Tracker</h1>
+<h1 align="center" id="title">CashPilot</h1>
 
 <p align="center"><img src="https://is2-ssl.mzstatic.com/image/thumb/Purple122/v4/54/eb/d6/54ebd689-99a9-75ec-d47e-6df070a2ab8b/AppIcon-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg" alt="project-image"></p>
 
-<p id="description">An Expense Tracker is a financial tool or application designed to help individuals or businesses monitor and manage their expenses.We can categorize our expenses and make informed decisions about their budgeting and spending habits.I have build this project as part of my learning express and MVC architecture.It mainly aims at understanding the rendering of different pages and gives you the insight of using payment systems and sending cross website links for resetting passwords.</p>
+<p id="description">An CashPilot is a financial tool or application designed to help individuals or businesses monitor and manage their expenses.We can categorize our expenses and make informed decisions about their budgeting and spending habits.I have build this project as part of my learning express and MVC architecture.It mainly aims at understanding the rendering of different pages and gives you the insight of using payment systems and sending cross website links for resetting passwords.</p>
 
 <h2>🚀 Demo</h2>
 
